@@ -16,7 +16,9 @@ load_dotenv()
 
 st.title("RAG App Demo")
 
-urls = ['https://www.victoriaonmove.com.au/local-removalists.html','https://victoriaonmove.com.au/index.html','https://victoriaonmove.com.au/contact.html']
+urls = ['https://www.victoriaonmove.com.au/local-removalists.html',
+'https://victoriaonmove.com.au/index.html',
+'https://victoriaonmove.com.au/contact.html']
 loader = UnstructuredURLLoader(urls=urls)
 data = loader.load()
 
@@ -25,13 +27,14 @@ data = loader.load()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000)
 docs = text_splitter.split_documents(data)
 all_splits = docs
+
 vectorstore = Chroma.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
 
 
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 6})
 
 
-llm = OpenAI(temperature=0.4, max_tokens=500)
+llm = OpenAI(temperature=0.3, max_tokens=500)
 
 
 
@@ -66,3 +69,8 @@ if query:
     print(response["answer"])
 
     st.write(response["answer"])
+
+
+
+
+#streamlit run app.py
